@@ -1,7 +1,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {SignupForm} from './signup-form';
+import {ReduxSignupExample} from './redux-signup/signup-form';
 
 class State {
     @observable name = 'Hello';
@@ -31,7 +31,7 @@ export class App extends React.Component {
 
         return (
             <div className="container">
-                <SignupForm />
+                <ReduxSignupExample />
             </div>
         );
     }
