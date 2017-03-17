@@ -1,7 +1,8 @@
 import React from 'react';
 import {connect, Provider} from 'react-redux';
-import {SET_FIELD, store, VALIDATE_USERNAME_END, VALIDATE_USERNAME_FAIL, VALIDATE_USERNAME_START} from './store';
-import {validateUserName} from './username-validator';
+import {SET_FIELD, store, VALIDATE_END, VALIDATE_FAIL, VALIDATE_START} from './store';
+import {validateForm} from './form-validator';
+import {FormField} from '../components/form-field';
 
 class ConnectedSignupForm extends React.Component {
     render() {
@@ -21,13 +22,11 @@ class ConnectedSignupForm extends React.Component {
 
                     <form>
                         <div>
-                            <FormField title="Pick a username"
+                            <FormField title={`Pick a username <small class="text-muted">${validation.userName.pending ? '(Validating...)' : ''}</small>`}
                                        value={userName}
                                        onChange={this.setUserName}
-                                       error={validation.userName.failed} />
-                            {
-                                validation.userName.pending ? 'Validating...' : 'Valid'
-                            }
+                                       error={!validation.userName.valid}
+                                       showValidation={true} />
                         </div>
 
                         <FormField title="Pick a strong password"
@@ -72,22 +71,6 @@ class ConnectedSignupForm extends React.Component {
     setEmail = this.setField('email');
 }
 
-function FormField({title, type = 'text', value = '', onChange, error}) {
-    return (
-        <div className={`form-group ${error ? 'has-danger' : ''}`}>
-            <label>{title}</label>
-            <input type={type} className="form-control" value={value} onChange={onChange} />
-        </div>
-    );
-}
-FormField.propTypes = {
-    title: React.PropTypes.string,
-    type: React.PropTypes.oneOf(['text', 'checkbox', 'password']),
-    onChange: React.PropTypes.func,
-    value: React.PropTypes.string,
-    error: React.PropTypes.any,
-};
-
 function Header() {
     return (
         <div className="card card-inverse card-primary text-center">
@@ -113,12 +96,12 @@ const mapDispatchToProps = (dispatch) => {
 
             switch (field) {
                 case 'userName':
-                    dispatch({type: VALIDATE_USERNAME_START});
+                    dispatch({type: VALIDATE_START, payload: 'userName'});
                     try {
-                        await validateUserName(value);
-                        dispatch({type: VALIDATE_USERNAME_END});
+                        await validateForm(value);
+                        dispatch({type: VALIDATE_END, payload: 'userName'});
                     } catch (e) {
-                        dispatch({type: VALIDATE_USERNAME_FAIL});
+                        dispatch({type: VALIDATE_FAIL, payload: 'userName'});
                     }
 
                     break;

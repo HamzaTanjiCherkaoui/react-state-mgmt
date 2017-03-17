@@ -1,36 +1,35 @@
 import {createStore} from 'redux';
 
-export const VALIDATE_USERNAME_START = 'VALIDATE_USERNAME_START';
-export const VALIDATE_USERNAME_FAIL = 'VALIDATE_USERNAME_FAIL';
-export const VALIDATE_USERNAME_END = 'VALIDATE_USERNAME_END';
+export const VALIDATE_START = 'VALIDATE_START';
+export const VALIDATE_FAIL = 'VALIDATE_FAIL';
+export const VALIDATE_END = 'VALIDATE_END';
 export const SET_FIELD = 'SET_FIELD';
 
 function validationReducer(state, action) {
+    const property = action.payload;
+
     switch (action.type) {
-        case VALIDATE_USERNAME_START:
+        case VALIDATE_START:
             return {
-                userName: {
+                [property]: {
                     pending: true,
-                    failed: false,
-                    completed: false
+                    valid: false,
                 }
             };
 
-        case VALIDATE_USERNAME_FAIL:
+        case VALIDATE_FAIL:
             return {
-                userName: {
+                [property]: {
                     pending: false,
-                    failed: true,
-                    completed: false
+                    valid: false,
                 }
             };
 
-        case VALIDATE_USERNAME_END:
+        case VALIDATE_END:
             return {
-                userName: {
+                [property]: {
                     pending: false,
-                    failed: false,
-                    completed: true
+                    valid: true
                 }
             };
 
@@ -66,8 +65,7 @@ const initialState = {
     validation: {
         userName: {
             pending: false,
-            failed: false,
-            completed: false
+            valid: false,
         }
     }
 };
