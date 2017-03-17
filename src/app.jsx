@@ -1,6 +1,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
+import {SignupForm} from './signup-form';
 
 class State {
     @observable name = 'Hello';
@@ -29,7 +30,9 @@ export class App extends React.Component {
         const {name} = state;
 
         return (
-            <h1>{name}</h1>
+            <div className="container">
+                <SignupForm />
+            </div>
         );
     }
 }
