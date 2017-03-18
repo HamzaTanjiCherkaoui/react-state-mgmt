@@ -16,7 +16,7 @@ export function FormContainer({children}) {
 
 function Header() {
     return (
-        <div className="card card-inverse card-primary text-center">
+        <div className="card card-inverse card-primary text-center mb-3 mt-3">
             <div className="card-block">
                 <h3>Welcome to</h3>
                 <h1>SyntaxCon</h1>
