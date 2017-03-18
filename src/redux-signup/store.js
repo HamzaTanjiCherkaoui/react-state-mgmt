@@ -1,9 +1,7 @@
 import {applyMiddleware, createStore} from 'redux';
-import {ACTION_VALIDATION, validateForm} from './form-validator';
+import {VALIDATE_END, VALIDATE_FAIL, VALIDATE_START} from './form-validator';
+import thunk from 'redux-thunk';
 
-export const VALIDATE_START = 'VALIDATE_START';
-export const VALIDATE_FAIL = 'VALIDATE_FAIL';
-export const VALIDATE_END = 'VALIDATE_END';
 export const SET_FIELD = 'SET_FIELD';
 
 function validationReducer(state, action) {
@@ -72,19 +70,4 @@ const initialState = {
     }
 };
 
-const validator = store => next => async (action) => {
-    if (action.type === ACTION_VALIDATION) {
-
-        next({type: VALIDATE_START});
-        try {
-            await validateForm(action.payload);
-            next({type: VALIDATE_END});
-        } catch (err) {
-            next({type: VALIDATE_FAIL, payload: err});
-        }
-
-    } else {
-        next(action);
-    }
-};
-export const store = createStore(reducer, initialState, applyMiddleware(validator));
+export const store = createStore(reducer, initialState, applyMiddleware(thunk));

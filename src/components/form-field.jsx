@@ -1,9 +1,9 @@
 import React from 'react';
 
-export function FormField({title, type = 'text', value = '', onChange, error, showValidation = false}) {
+export function FormField({title, type = 'text', value = '', onChange, error, enableValidation = false}) {
     const validationClass = {
-        group: showValidation ? (error ? 'has-danger' : 'has-success') : '',
-        control: showValidation ? (error ? 'form-control-danger' : 'form-control-success') : ''
+        group: enableValidation ? (error ? 'has-danger' : 'has-success') : '',
+        control: enableValidation ? (error ? 'form-control-danger' : 'form-control-success') : ''
     };
 
     return (
@@ -23,6 +23,6 @@ FormField.propTypes = {
     onChange: React.PropTypes.func,
     value: React.PropTypes.string,
     error: React.PropTypes.any,
-    showValidation: React.PropTypes.bool,
+    enableValidation: React.PropTypes.bool,
 };
 

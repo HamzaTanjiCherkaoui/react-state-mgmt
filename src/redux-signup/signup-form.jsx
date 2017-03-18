@@ -1,8 +1,19 @@
 import React from 'react';
 import {connect, Provider} from 'react-redux';
 import {SET_FIELD, store} from './store';
-import {ACTION_VALIDATION} from './form-validator';
 import {FormField} from '../components/form-field';
+import {validateAction} from './form-validator';
+
+function Header() {
+    return (
+        <div className="card card-inverse card-primary text-center">
+            <div className="card-block">
+                <h3>Welcome to</h3>
+                <h1>SyntaxCon</h1>
+            </div>
+        </div>
+    );
+}
 
 class ConnectedSignupForm extends React.Component {
     render() {
@@ -27,7 +38,7 @@ class ConnectedSignupForm extends React.Component {
                                 title={`Pick a username <small class="text-muted">${validation.pending ? '(Validating...)' : ''}</small>`}
                                 value={username}
                                 onChange={this.setUserName}
-                                showValidation={touched}
+                                enableValidation={touched}
                                 error={!validation.valid && validation.error.username} />
                         </div>
 
@@ -35,7 +46,7 @@ class ConnectedSignupForm extends React.Component {
                                    type="password"
                                    value={password}
                                    onChange={this.setPassword}
-                                   showValidation={touched}
+                                   enableValidation={touched}
                                    error={!validation.valid && validation.error.password} />
 
                         <div className="row">
@@ -43,7 +54,7 @@ class ConnectedSignupForm extends React.Component {
                                 <FormField title="First Name"
                                            value={firstName}
                                            onChange={this.setFirstName}
-                                           showValidation={touched}
+                                           enableValidation={touched}
                                            error={!validation.valid && validation.error.firstName} />
 
                             </div>
@@ -51,7 +62,7 @@ class ConnectedSignupForm extends React.Component {
                                 <FormField title="Last Name"
                                            value={lastName}
                                            onChange={this.setLastName}
-                                           showValidation={touched}
+                                           enableValidation={touched}
                                            error={!validation.valid && validation.error.lastName} />
 
                             </div>
@@ -60,13 +71,13 @@ class ConnectedSignupForm extends React.Component {
                         <FormField title="Email"
                                    value={email}
                                    onChange={this.setEmail}
-                                   showValidation={touched}
+                                   enableValidation={touched}
                                    error={!validation.valid && validation.error.email} />
 
 
                         <div className="row">
                             <div className="col">
-                                <button className="btn btn-primary">Sign up</button>
+                                <button className="btn btn-primary" disabled={!validation.valid}>Sign up</button>
                                 <button className="btn btn-link">Not now</button>
                             </div>
                         </div>
@@ -104,30 +115,13 @@ class ConnectedSignupForm extends React.Component {
     setEmail = this.setField('email');
 }
 
-function Header() {
-    return (
-        <div className="card card-inverse card-primary text-center">
-            <div className="card-block">
-                <h3>Welcome to</h3>
-                <h1>SyntaxCon</h1>
-            </div>
-        </div>
-    );
-}
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => {
     return {
         onFieldChange: async (field, value, state) => {
-            dispatch({
-                type: SET_FIELD,
-                payload: {
-                    field,
-                    value
-                }
-            });
-
-            dispatch({type: ACTION_VALIDATION, payload: state});
+            dispatch({type: SET_FIELD, payload: {field, value}});
+            dispatch(validateAction(state));
         }
     };
 };

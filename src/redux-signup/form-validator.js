@@ -20,15 +20,24 @@ const rules = {
     email: {presence: true},
 };
 
-class ValidationErrors extends Error {
-    errors = null;
-    constructor(errors) {
-        super();
-        this.errors = errors;
-    }
-}
+export const VALIDATE_START = 'VALIDATE_START';
+export const VALIDATE_FAIL = 'VALIDATE_FAIL';
+export const VALIDATE_END = 'VALIDATE_END';
 
-export const ACTION_VALIDATION = '__VALIDATION__';
-export function validateForm(attributes) {
+function validateForm(attributes) {
     return validate.async(attributes, rules);
 }
+
+export const validateAction = (formData) => {
+    return async (dispatch) => {
+
+        dispatch({type: VALIDATE_START});
+        try {
+            await validateForm(formData);
+            dispatch({type: VALIDATE_END});
+        } catch (err) {
+            dispatch({type: VALIDATE_FAIL, payload: err});
+        }
+
+    };
+};
