@@ -1,89 +1,79 @@
 import React from 'react';
 import {connect, Provider} from 'react-redux';
-import {SET_FIELD, store} from './store';
+import {browserHistory, SET_FIELD, store} from './store';
 import {FormField} from '../components/form-field';
 import {validateAction} from './form-validator';
-
-function Header() {
-    return (
-        <div className="card card-inverse card-primary text-center">
-            <div className="card-block">
-                <h3>Welcome to</h3>
-                <h1>SyntaxCon</h1>
-            </div>
-        </div>
-    );
-}
+import {FormContainer} from '../components/form-container';
+import {Redirect, Route, Router} from 'react-router-dom';
+import {SignupComplete} from './signup-complete';
+import {routingAction} from './routing-middleware';
+import {SignupCanceled} from './signup-canceled';
 
 class ConnectedSignupForm extends React.Component {
     render() {
         const {
-            username,
-            firstName,
-            lastName,
-            password,
-            email,
-            touched,
-            validation
+            info: {
+                username,
+                firstName,
+                lastName,
+                password,
+                email,
+
+                touched,
+            },
+            validation,
+            onCancel
         } = this.props;
 
         return (
-            <div className="row">
-                <div className="col-xs-12 col-sm-6">
-                    <Header />
+            <FormContainer>
+                <FormField
+                    title={`Pick a username <small class="text-muted">${validation.pending ? '(Validating...)' : ''}</small>`}
+                    value={username}
+                    onChange={this.setUserName}
+                    enableValidation={touched}
+                    error={!validation.valid && validation.error.username} />
 
-                    <form>
-                        <div>
-                            <FormField
-                                title={`Pick a username <small class="text-muted">${validation.pending ? '(Validating...)' : ''}</small>`}
-                                value={username}
-                                onChange={this.setUserName}
-                                enableValidation={touched}
-                                error={!validation.valid && validation.error.username} />
-                        </div>
+                <FormField title="Pick a strong password"
+                           type="password"
+                           value={password}
+                           onChange={this.setPassword}
+                           enableValidation={touched}
+                           error={!validation.valid && validation.error.password} />
 
-                        <FormField title="Pick a strong password"
-                                   type="password"
-                                   value={password}
-                                   onChange={this.setPassword}
+                <div className="row">
+                    <div className="col">
+                        <FormField title="First Name"
+                                   value={firstName}
+                                   onChange={this.setFirstName}
                                    enableValidation={touched}
-                                   error={!validation.valid && validation.error.password} />
+                                   error={!validation.valid && validation.error.firstName} />
 
-                        <div className="row">
-                            <div className="col">
-                                <FormField title="First Name"
-                                           value={firstName}
-                                           onChange={this.setFirstName}
-                                           enableValidation={touched}
-                                           error={!validation.valid && validation.error.firstName} />
-
-                            </div>
-                            <div className="col">
-                                <FormField title="Last Name"
-                                           value={lastName}
-                                           onChange={this.setLastName}
-                                           enableValidation={touched}
-                                           error={!validation.valid && validation.error.lastName} />
-
-                            </div>
-                        </div>
-
-                        <FormField title="Email"
-                                   value={email}
-                                   onChange={this.setEmail}
+                    </div>
+                    <div className="col">
+                        <FormField title="Last Name"
+                                   value={lastName}
+                                   onChange={this.setLastName}
                                    enableValidation={touched}
-                                   error={!validation.valid && validation.error.email} />
+                                   error={!validation.valid && validation.error.lastName} />
 
-
-                        <div className="row">
-                            <div className="col">
-                                <button className="btn btn-primary" disabled={!validation.valid}>Sign up</button>
-                                <button className="btn btn-link">Not now</button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                <FormField title="Email"
+                           value={email}
+                           onChange={this.setEmail}
+                           enableValidation={touched}
+                           error={!validation.valid && validation.error.email} />
+
+
+                <div className="row">
+                    <div className="col">
+                        <button className="btn btn-primary" disabled={!validation.valid}>Sign up</button>
+                        <button className="btn btn-link" onClick={onCancel}>Not now</button>
+                    </div>
+                </div>
+            </FormContainer>
         );
     }
 
@@ -94,7 +84,7 @@ class ConnectedSignupForm extends React.Component {
             lastName,
             password,
             email,
-        } = this.props;
+        } = this.props.info;
 
         const state = {
             username,
@@ -119,9 +109,13 @@ class ConnectedSignupForm extends React.Component {
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => {
     return {
-        onFieldChange: async (field, value, state) => {
+        async onFieldChange(field, value, state) {
             dispatch({type: SET_FIELD, payload: {field, value}});
             dispatch(validateAction(state));
+        },
+
+        onCancel() {
+            dispatch(routingAction('/signup/cancel'));
         }
     };
 };
@@ -131,7 +125,14 @@ const SignupForm = connect(mapStateToProps, mapDispatchToProps)(ConnectedSignupF
 export function ReduxSignupExample() {
     return (
         <Provider store={store}>
-            <SignupForm />
+            <Router history={browserHistory}>
+                <div>
+                    <Redirect from="/" to={'/signup'} />
+                    <Route path="/signup" exact={true} component={SignupForm} />
+                    <Route path="/signup/complete" component={SignupComplete} />
+                    <Route path="/signup/cancel" component={SignupCanceled} />
+                </div>
+            </Router>
         </Provider>
     );
 }

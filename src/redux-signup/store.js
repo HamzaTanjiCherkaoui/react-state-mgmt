@@ -1,6 +1,8 @@
 import {applyMiddleware, createStore} from 'redux';
 import {VALIDATE_END, VALIDATE_FAIL, VALIDATE_START} from './form-validator';
 import thunk from 'redux-thunk';
+import createBrowserHistory from 'history/createBrowserHistory';
+import {createRoutingMiddleware} from './routing-middleware';
 
 export const SET_FIELD = 'SET_FIELD';
 
@@ -42,8 +44,11 @@ function reducer(state = {}, action) {
             const {field, value} = action.payload;
             return {
                 ...state,
-                touched: true,
-                [field]: value
+                info: {
+                    ...state.info,
+                    touched: true,
+                    [field]: value
+                }
             };
 
         default:
@@ -55,13 +60,17 @@ function reducer(state = {}, action) {
 }
 
 const initialState = {
-    username: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
+    info: {
+        username: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
 
-    touched: false,
+        touched: false,
+    },
+
+    isAuthenticated: false,
 
     validation: {
         pending: false,
@@ -70,4 +79,5 @@ const initialState = {
     }
 };
 
-export const store = createStore(reducer, initialState, applyMiddleware(thunk));
+export const browserHistory = createBrowserHistory();
+export const store = createStore(reducer, initialState, applyMiddleware(thunk, createRoutingMiddleware(browserHistory)));
