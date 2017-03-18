@@ -22,7 +22,7 @@ FormField.propTypes = {
     type: React.PropTypes.oneOf(['text', 'checkbox', 'password']),
     onChange: React.PropTypes.func,
     value: React.PropTypes.string,
-    error: React.PropTypes.bool,
+    error: React.PropTypes.any,
     showValidation: React.PropTypes.bool,
 };
 

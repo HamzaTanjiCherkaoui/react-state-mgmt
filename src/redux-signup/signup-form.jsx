@@ -1,17 +1,18 @@
 import React from 'react';
 import {connect, Provider} from 'react-redux';
-import {SET_FIELD, store, VALIDATE_END, VALIDATE_FAIL, VALIDATE_START} from './store';
-import {validateForm} from './form-validator';
+import {SET_FIELD, store} from './store';
+import {ACTION_VALIDATION} from './form-validator';
 import {FormField} from '../components/form-field';
 
 class ConnectedSignupForm extends React.Component {
     render() {
         const {
-            userName,
+            username,
             firstName,
             lastName,
             password,
             email,
+            touched,
             validation
         } = this.props;
 
@@ -22,34 +23,46 @@ class ConnectedSignupForm extends React.Component {
 
                     <form>
                         <div>
-                            <FormField title={`Pick a username <small class="text-muted">${validation.userName.pending ? '(Validating...)' : ''}</small>`}
-                                       value={userName}
-                                       onChange={this.setUserName}
-                                       error={!validation.userName.valid}
-                                       showValidation={true} />
+                            <FormField
+                                title={`Pick a username <small class="text-muted">${validation.pending ? '(Validating...)' : ''}</small>`}
+                                value={username}
+                                onChange={this.setUserName}
+                                showValidation={touched}
+                                error={!validation.valid && validation.error.username} />
                         </div>
 
                         <FormField title="Pick a strong password"
                                    type="password"
                                    value={password}
-                                   onChange={this.setPassword} />
+                                   onChange={this.setPassword}
+                                   showValidation={touched}
+                                   error={!validation.valid && validation.error.password} />
 
                         <div className="row">
                             <div className="col">
                                 <FormField title="First Name"
                                            value={firstName}
-                                           onChange={this.setFirstName} />
+                                           onChange={this.setFirstName}
+                                           showValidation={touched}
+                                           error={!validation.valid && validation.error.firstName} />
+
                             </div>
                             <div className="col">
                                 <FormField title="Last Name"
                                            value={lastName}
-                                           onChange={this.setLastName} />
+                                           onChange={this.setLastName}
+                                           showValidation={touched}
+                                           error={!validation.valid && validation.error.lastName} />
+
                             </div>
                         </div>
 
                         <FormField title="Email"
                                    value={email}
-                                   onChange={this.setEmail} />
+                                   onChange={this.setEmail}
+                                   showValidation={touched}
+                                   error={!validation.valid && validation.error.email} />
+
 
                         <div className="row">
                             <div className="col">
@@ -63,8 +76,28 @@ class ConnectedSignupForm extends React.Component {
         );
     }
 
-    setField = field => (event => this.props.onFieldChange(field, event.target.value));
-    setUserName = this.setField('userName');
+    setField = field => (event => {
+        const {
+            username,
+            firstName,
+            lastName,
+            password,
+            email,
+        } = this.props;
+
+        const state = {
+            username,
+            firstName,
+            lastName,
+            password,
+            email,
+        };
+        const value = event.target.value;
+
+        state[field] = value;
+        this.props.onFieldChange(field, value, state);
+    });
+    setUserName = this.setField('username');
     setPassword = this.setField('password');
     setFirstName = this.setField('firstName');
     setLastName = this.setField('lastName');
@@ -85,7 +118,7 @@ function Header() {
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => {
     return {
-        onFieldChange: async (field, value) => {
+        onFieldChange: async (field, value, state) => {
             dispatch({
                 type: SET_FIELD,
                 payload: {
@@ -94,20 +127,7 @@ const mapDispatchToProps = (dispatch) => {
                 }
             });
 
-            switch (field) {
-                case 'userName':
-                    dispatch({type: VALIDATE_START, payload: 'userName'});
-                    try {
-                        await validateForm(value);
-                        dispatch({type: VALIDATE_END, payload: 'userName'});
-                    } catch (e) {
-                        dispatch({type: VALIDATE_FAIL, payload: 'userName'});
-                    }
-
-                    break;
-
-                default:
-            }
+            dispatch({type: ACTION_VALIDATION, payload: state});
         }
     };
 };

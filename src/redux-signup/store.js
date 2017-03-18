@@ -1,4 +1,5 @@
-import {createStore} from 'redux';
+import {applyMiddleware, createStore} from 'redux';
+import {ACTION_VALIDATION, validateForm} from './form-validator';
 
 export const VALIDATE_START = 'VALIDATE_START';
 export const VALIDATE_FAIL = 'VALIDATE_FAIL';
@@ -11,26 +12,25 @@ function validationReducer(state, action) {
     switch (action.type) {
         case VALIDATE_START:
             return {
-                [property]: {
-                    pending: true,
-                    valid: false,
-                }
+                ...state,
+                pending: true,
+                valid: false,
             };
 
         case VALIDATE_FAIL:
             return {
-                [property]: {
-                    pending: false,
-                    valid: false,
-                }
+                ...state,
+                pending: false,
+                valid: false,
+                error: action.payload
             };
 
         case VALIDATE_END:
             return {
-                [property]: {
-                    pending: false,
-                    valid: true
-                }
+                ...state,
+                pending: false,
+                valid: true,
+                error: {}
             };
 
         default:
@@ -44,6 +44,7 @@ function reducer(state = {}, action) {
             const {field, value} = action.payload;
             return {
                 ...state,
+                touched: true,
                 [field]: value
             };
 
@@ -56,19 +57,34 @@ function reducer(state = {}, action) {
 }
 
 const initialState = {
-    userName: '',
+    username: '',
     firstName: '',
     lastName: '',
     email: '',
     password: '',
 
+    touched: false,
+
     validation: {
-        userName: {
-            pending: false,
-            valid: false,
-        }
+        pending: false,
+        valid: false,
+        error: {}
     }
 };
 
+const validator = store => next => async (action) => {
+    if (action.type === ACTION_VALIDATION) {
 
-export const store = createStore(reducer, initialState);
+        next({type: VALIDATE_START});
+        try {
+            await validateForm(action.payload);
+            next({type: VALIDATE_END});
+        } catch (err) {
+            next({type: VALIDATE_FAIL, payload: err});
+        }
+
+    } else {
+        next(action);
+    }
+};
+export const store = createStore(reducer, initialState, applyMiddleware(validator));
