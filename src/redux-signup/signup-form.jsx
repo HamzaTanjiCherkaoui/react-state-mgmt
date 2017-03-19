@@ -4,8 +4,8 @@ import {SET_FIELD, SIGNUP_COMPLETED, SIGNUP_FAILED, SIGNUP_STARTED} from './stor
 import {FormField} from '../components/form-field';
 import {validateAction} from './form-validator';
 import {FormContainer} from '../components/form-container';
-import {routingAction} from './routing-middleware';
 import {signup} from '../core/signup.service';
+import {push} from 'react-router-redux';
 
 class ConnectedSignupForm extends React.Component {
     render() {
@@ -135,7 +135,7 @@ const mapDispatchToProps = (dispatch) => {
         },
 
         onCancel() {
-            dispatch(routingAction('/signup/cancel'));
+            dispatch(push('/signup/cancel'));
         },
 
         async onSignup(formData) {
@@ -143,7 +143,7 @@ const mapDispatchToProps = (dispatch) => {
             try {
                 await signup(formData);
                 dispatch({type: SIGNUP_COMPLETED});
-                dispatch(routingAction('/signup/complete'));
+                dispatch(push('/signup/complete'));
             } catch (e) {
                 dispatch({type: SIGNUP_FAILED});
             }

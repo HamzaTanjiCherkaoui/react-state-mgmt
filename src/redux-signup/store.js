@@ -1,15 +1,43 @@
-import {applyMiddleware, createStore} from 'redux';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
 import {VALIDATE_END, VALIDATE_FAIL, VALIDATE_START} from './form-validator';
 import thunk from 'redux-thunk';
-import {createRoutingMiddleware} from './routing-middleware';
 import {browserHistory} from '../core/browser-history';
+import {routerMiddleware, routerReducer} from 'react-router-redux';
 
 export const SET_FIELD = 'SET_FIELD';
 export const SIGNUP_STARTED = 'SIGNUP_STARTED';
 export const SIGNUP_COMPLETED = 'SIGNUP_COMPLETED';
 export const SIGNUP_FAILED = 'SIGNUP_FAILED';
 
-function validationReducer(state, action) {
+const initialState = {
+    info: {
+        username: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+
+        touched: false,
+    },
+
+
+    // login: {isAuthenticated: false},
+    router: {location: ''},
+
+    signup: {
+        pending: false,
+        completed: false,
+        failed: false
+    },
+
+    validation: {
+        pending: false,
+        valid: false,
+        error: {}
+    }
+};
+
+function validationReducer(state = initialState.validation, action) {
     const property = action.payload;
 
     switch (action.type) {
@@ -41,7 +69,7 @@ function validationReducer(state, action) {
     }
 }
 
-function signupReducer(state, action) {
+function signupReducer(state = initialState.signup, action) {
     switch (action.type) {
         case SIGNUP_STARTED:
             return {
@@ -72,57 +100,35 @@ function signupReducer(state, action) {
     }
 }
 
-function reducer(state = {}, action) {
+function infoReducer(state = initialState.info, action) {
     switch (action.type) {
         case SET_FIELD:
             const {field, value} = action.payload;
             return {
                 ...state,
-                info: {
-                    ...state.info,
-                    touched: true,
-                    [field]: value
-                }
+                touched: true,
+                [field]: value
+            };
+
+        case SIGNUP_COMPLETED:
+            return {
+                ...state,
+                ...initialState.info
             };
 
         default:
-            return {
-                ...state,
-                validation: validationReducer(state.validation, action),
-                signup: signupReducer(state.signup, action)
-            };
+            return state;
     }
 }
 
-const initialState = {
-        info: {
-            username: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-
-            touched: false,
-        },
-
-        isAuthenticated: false,
-
-        signup: {
-            pending: false,
-            completed: false,
-            failed: false
-        },
-
-        validation: {
-            pending: false,
-            valid: false,
-            error: {}
-        }
-    }
-;
 
 export const store = createStore(
-    reducer,
+    combineReducers({
+        info: infoReducer,
+        signup: signupReducer,
+        validation: validationReducer,
+        router: routerReducer
+    }),
     initialState,
-    applyMiddleware(thunk, createRoutingMiddleware(browserHistory))
+    applyMiddleware(thunk, routerMiddleware(browserHistory))
 );

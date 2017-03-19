@@ -5,15 +5,21 @@ import {store} from './store';
 import {SignupForm} from './signup-form';
 import {Provider} from 'react-redux';
 import {Route} from 'react-router-dom';
+import {browserHistory} from '../core/browser-history';
+import {ConnectedRouter} from 'react-router-redux';
+import {Home} from '../components/home';
 
 export function ReduxSignupExample() {
     return (
         <Provider store={store}>
-            <div>
-                <Route path="/signup" exact={true} component={SignupForm} />
-                <Route path="/signup/complete" component={SignupComplete} />
-                <Route path="/signup/cancel" component={SignupCanceled} />
-            </div>
+            <ConnectedRouter history={browserHistory}>
+                <div>
+                    <Route path="/signup" exact={true} component={SignupForm} />
+                    <Route path="/signup/complete" component={SignupComplete} />
+                    <Route path="/signup/cancel" component={SignupCanceled} />
+                    <Route path="/home" component={Home} />
+                </div>
+            </ConnectedRouter>
         </Provider>
     );
 }

@@ -3,7 +3,7 @@ import validate from 'validate.js';
 validate.validators.checkUserName = (value) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            const result = value === '' ? false : Math.random() > 0.5;
+            const result = value === '' ? false : Math.random() > 0.25;
             result ? resolve() : resolve('already exists or is invalid');
         }, 250);
     });
