@@ -6,6 +6,7 @@ import {validateAction} from './form-validator';
 import {FormContainer} from '../components/form-container';
 import {signup} from '../core/signup.service';
 import {push} from 'react-router-redux';
+import {debounce} from 'lodash';
 
 class ConnectedSignupForm extends React.Component {
     render() {
@@ -30,7 +31,8 @@ class ConnectedSignupForm extends React.Component {
             <FormContainer>
                 {
                     signup.failed
-                        ? (<div className="alert alert-danger"><strong>Oops</strong>, something went wrong. Please try again.</div>)
+                        ? (<div className="alert alert-danger"><strong>Oops</strong>, something went wrong. Please try
+                        again.</div>)
                         : null
                 }
                 <FormField
@@ -126,12 +128,16 @@ class ConnectedSignupForm extends React.Component {
 }
 
 
+const debouncedValidate = debounce((dispatch, formData) => {
+    dispatch(validateAction(formData));
+}, 250);
+
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => {
     return {
-        async onFieldChange(field, value, state) {
+        onFieldChange: (field, value, formData) => {
             dispatch({type: SET_FIELD, payload: {field, value}});
-            dispatch(validateAction(state));
+            debouncedValidate(dispatch, formData);
         },
 
         onCancel() {
