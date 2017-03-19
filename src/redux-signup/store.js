@@ -8,6 +8,7 @@ export const SET_FIELD = 'SET_FIELD';
 export const SIGNUP_STARTED = 'SIGNUP_STARTED';
 export const SIGNUP_COMPLETED = 'SIGNUP_COMPLETED';
 export const SIGNUP_FAILED = 'SIGNUP_FAILED';
+export const SIGNUP_CANCELED = 'SIGNUP_CANCELED';
 
 const initialState = {
     info: {
@@ -111,6 +112,7 @@ function infoReducer(state = initialState.info, action) {
             };
 
         case SIGNUP_COMPLETED:
+        case SIGNUP_CANCELED:
             return {
                 ...state,
                 ...initialState.info

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {SET_FIELD, SIGNUP_COMPLETED, SIGNUP_FAILED, SIGNUP_STARTED} from './store';
+import {SET_FIELD, SIGNUP_CANCELED, SIGNUP_COMPLETED, SIGNUP_FAILED, SIGNUP_STARTED} from './store';
 import {FormField} from '../components/form-field';
 import {validateAction} from './form-validator';
 import {FormContainer} from '../components/form-container';
@@ -141,6 +141,7 @@ const mapDispatchToProps = (dispatch) => {
         },
 
         onCancel() {
+            dispatch({type: SIGNUP_CANCELED});
             dispatch(push('/signup/cancel'));
         },
 
