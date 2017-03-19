@@ -1,13 +1,11 @@
 import React from 'react';
-import {connect, Provider} from 'react-redux';
-import {browserHistory, SET_FIELD, store} from './store';
+import {connect} from 'react-redux';
+import {SET_FIELD, SIGNUP_COMPLETED, SIGNUP_FAILED, SIGNUP_STARTED} from './store';
 import {FormField} from '../components/form-field';
 import {validateAction} from './form-validator';
 import {FormContainer} from '../components/form-container';
-import {Redirect, Route, Router} from 'react-router-dom';
-import {SignupComplete} from './signup-complete';
 import {routingAction} from './routing-middleware';
-import {SignupCanceled} from './signup-canceled';
+import {signup} from '../core/signup.service';
 
 class ConnectedSignupForm extends React.Component {
     render() {
@@ -22,11 +20,19 @@ class ConnectedSignupForm extends React.Component {
                 touched,
             },
             validation,
+            signup,
             onCancel
         } = this.props;
 
+        const signupLabel = signup.pending ? 'Signing up...' : 'Sign up';
+
         return (
             <FormContainer>
+                {
+                    signup.failed
+                        ? (<div className="alert alert-danger"><strong>Oops</strong>, something went wrong. Please try again.</div>)
+                        : null
+                }
                 <FormField
                     title={`Pick a username <small class="text-muted">${validation.pending ? '(Validating...)' : ''}</small>`}
                     value={username}
@@ -69,7 +75,9 @@ class ConnectedSignupForm extends React.Component {
 
                 <div className="row">
                     <div className="col">
-                        <button className="btn btn-primary" disabled={!validation.valid}>Sign up</button>
+                        <button className="btn btn-primary btn-lg"
+                                onClick={this.onSignup}
+                                disabled={!validation.valid || signup.pending}>{signupLabel}</button>
                         <button className="btn btn-link" onClick={onCancel}>Not now</button>
                     </div>
                 </div>
@@ -77,7 +85,7 @@ class ConnectedSignupForm extends React.Component {
         );
     }
 
-    setField = field => (event => {
+    getFormData() {
         const {
             username,
             firstName,
@@ -86,18 +94,30 @@ class ConnectedSignupForm extends React.Component {
             email,
         } = this.props.info;
 
-        const state = {
+        return {
             username,
             firstName,
             lastName,
             password,
             email,
         };
+    }
+
+    onSignup = (event) => {
+        event.preventDefault();
+
+        const data = this.getFormData();
+        this.props.onSignup(data);
+    };
+
+    setField = field => (event => {
+        const state = this.getFormData();
         const value = event.target.value;
 
         state[field] = value;
         this.props.onFieldChange(field, value, state);
     });
+
     setUserName = this.setField('username');
     setPassword = this.setField('password');
     setFirstName = this.setField('firstName');
@@ -116,23 +136,20 @@ const mapDispatchToProps = (dispatch) => {
 
         onCancel() {
             dispatch(routingAction('/signup/cancel'));
+        },
+
+        async onSignup(formData) {
+            dispatch({type: SIGNUP_STARTED});
+            try {
+                await signup(formData);
+                dispatch({type: SIGNUP_COMPLETED});
+                dispatch(routingAction('/signup/complete'));
+            } catch (e) {
+                dispatch({type: SIGNUP_FAILED});
+            }
         }
     };
 };
 
-const SignupForm = connect(mapStateToProps, mapDispatchToProps)(ConnectedSignupForm);
+export const SignupForm = connect(mapStateToProps, mapDispatchToProps)(ConnectedSignupForm);
 
-export function ReduxSignupExample() {
-    return (
-        <Provider store={store}>
-            <Router history={browserHistory}>
-                <div>
-                    <Redirect from="/" to={'/signup'} />
-                    <Route path="/signup" exact={true} component={SignupForm} />
-                    <Route path="/signup/complete" component={SignupComplete} />
-                    <Route path="/signup/cancel" component={SignupCanceled} />
-                </div>
-            </Router>
-        </Provider>
-    );
-}
