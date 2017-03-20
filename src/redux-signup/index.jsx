@@ -1,10 +1,10 @@
 import React from 'react';
-import {SignupComplete} from './signup-complete';
-import {SignupCanceled} from './signup-canceled';
+import {SignupComplete} from '../components/signup/signup-complete';
+import {SignupCanceled} from '../components/signup/signup-canceled';
 import {store} from './store';
 import {SignupForm} from './signup-form';
 import {Provider} from 'react-redux';
-import {Route} from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import {browserHistory} from '../core/browser-history';
 import {ConnectedRouter} from 'react-router-redux';
 import {Home} from '../components/home';
@@ -13,13 +13,26 @@ export function ReduxSignupExample() {
     return (
         <Provider store={store}>
             <ConnectedRouter history={browserHistory}>
-                <div>
+                <Switch>
                     <Route path="/signup" exact={true} component={SignupForm} />
-                    <Route path="/signup/complete" component={SignupComplete} />
-                    <Route path="/signup/cancel" component={SignupCanceled} />
+                    <Route path="/signup/complete" component={CustomSignupComplete} />
+                    <Route path="/signup/cancel" component={CustomSignupCanceled} />
                     <Route path="/home" component={Home} />
-                </div>
+                    <Redirect from="/" to="/signup" />
+                </Switch>
             </ConnectedRouter>
         </Provider>
+    );
+}
+
+function CustomSignupComplete() {
+    return (
+        <SignupComplete homePath={'/home'} />
+    );
+}
+
+function CustomSignupCanceled() {
+    return (
+        <SignupCanceled signupPath={'/signup'} />
     );
 }

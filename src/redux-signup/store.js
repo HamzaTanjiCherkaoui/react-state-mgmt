@@ -2,7 +2,7 @@ import {applyMiddleware, combineReducers, createStore} from 'redux';
 import {VALIDATE_END, VALIDATE_FAIL, VALIDATE_START} from './form-validator';
 import thunk from 'redux-thunk';
 import {browserHistory} from '../core/browser-history';
-import {routerMiddleware, routerReducer} from 'react-router-redux';
+import {LOCATION_CHANGE, routerMiddleware, routerReducer} from 'react-router-redux';
 
 export const SET_FIELD = 'SET_FIELD';
 export const SIGNUP_STARTED = 'SIGNUP_STARTED';
@@ -22,7 +22,6 @@ const initialState = {
     },
 
 
-    // login: {isAuthenticated: false},
     router: {location: ''},
 
     signup: {
@@ -122,7 +121,6 @@ function infoReducer(state = initialState.info, action) {
             return state;
     }
 }
-
 
 export const store = createStore(
     combineReducers({

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import logo from '../core/logo.png';
+import logo from '../../core/logo.png';
 
-export function SignupComplete() {
+export function SignupComplete({homePath}) {
     return (
         <div className="card mt-5">
             <div className="card-block">
@@ -10,8 +10,11 @@ export function SignupComplete() {
                 <img src={logo} />
                 <p className="card-text">Awesome content awaits you!</p>
 
-                <Link to={'/home'} className="btn btn-primary btn-lg">Let's go</Link>
+                <Link to={homePath} className="btn btn-primary btn-lg">Let's go</Link>
             </div>
         </div>
     );
 }
+SignupComplete.propTypes = {
+    homePath: React.PropTypes.string
+};
