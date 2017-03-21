@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import {routerReducer} from 'react-router-redux';
 import {VALIDATE_END, VALIDATE_FAIL, VALIDATE_START} from './form-validator';
-import {SIGNUP_CANCELED, SIGNUP_COMPLETED, SIGNUP_STARTED, SET_FIELD, SIGNUP_FAILED, RESET_FORM} from './actions';
+import {RESET_FORM, SET_FIELD, SIGNUP_COMPLETED, SIGNUP_FAILED, SIGNUP_STARTED} from './actions';
 
 export const initialState = {
     info: {
