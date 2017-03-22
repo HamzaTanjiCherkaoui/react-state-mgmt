@@ -1,6 +1,7 @@
 import React from 'react';
 
 export function FormField({title, type = 'text', value = '', onChange, error, enableValidation = false}) {
+    const errorMessage = error && error[0];
     const validationClass = {
         group: enableValidation ? (error ? 'has-danger' : 'has-success') : '',
         control: enableValidation ? (error ? 'form-control-danger' : 'form-control-success') : ''
@@ -13,6 +14,13 @@ export function FormField({title, type = 'text', value = '', onChange, error, en
                    className={`form-control ${validationClass.control}`}
                    value={value}
                    onChange={onChange} />
+            {
+                errorMessage && (
+                    <div>
+                        <small className="form-control-feedback">{errorMessage}</small>
+                    </div>
+                )
+            }
         </div>
     );
 }

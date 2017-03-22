@@ -1,11 +1,13 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import logo from '../../core/logo.png';
 
 export function SignupCanceled({signupPath}) {
     return (
         <div className="card card-inverse bg-inverse mt-5">
+
             <div className="card-block">
-                <h1 className="card-title text-muted">SyntaxCon</h1>
+                <img src={logo}/>
                 <h3 className="card-title">Aww, not now?</h3>
                 <p className="card-text">Are you sure? SyntaxCon has some awesome content. At your own risk then.</p>
 

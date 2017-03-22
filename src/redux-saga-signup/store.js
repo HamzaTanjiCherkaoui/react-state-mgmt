@@ -3,14 +3,18 @@ import {browserHistory} from '../core/browser-history';
 import {push, routerMiddleware} from 'react-router-redux';
 import {initialState, reducer} from '../redux-signup/reducers';
 
-import createSagaMiddleware, {throttle, takeLatest} from 'redux-saga';
-import {call, put, take, spawn, fork} from 'redux-saga/effects';
+import createSagaMiddleware, {takeLatest, throttle} from 'redux-saga';
+import {call, fork, put, take} from 'redux-saga/effects';
 
 import {VALIDATE_END, VALIDATE_FAIL, VALIDATE_START} from '../redux-signup/form-validator';
 import {validateSignupForm} from '../core/signup-validator';
 import {
     RESET_FORM,
-    SIGNUP, SIGNUP_CANCELED, SIGNUP_COMPLETED, SIGNUP_FAILED, SIGNUP_STARTED,
+    SIGNUP,
+    SIGNUP_CANCELED,
+    SIGNUP_COMPLETED,
+    SIGNUP_FAILED,
+    SIGNUP_STARTED,
     VALIDATE
 } from '../redux-signup/actions';
 import {signup} from '../core/signup.service';
@@ -27,10 +31,14 @@ export const store = createStore(
 sagaMiddleware.run(mainSaga);
 
 function* mainSaga() {
-    yield takeLatest(SIGNUP, handleSignup);
+    yield fork(doSignup);
 
-    yield spawn(debouncedValidate);
-    yield spawn(navigateToCanceledPage);
+    yield fork(debouncedValidate);
+    yield fork(navigateToCanceledPage);
+}
+
+function* doSignup() {
+    yield takeLatest(SIGNUP, performSignup);
 }
 
 function* navigateToCanceledPage() {
@@ -41,7 +49,7 @@ function* navigateToCanceledPage() {
     }
 }
 
-function* handleSignup({payload: formData}) {
+function* performSignup({payload: formData}) {
     try {
         yield put({type: SIGNUP_STARTED});
         yield call(signup, formData);

@@ -14,10 +14,23 @@ const rules = {
         presence: true,
         checkUserName: true
     },
-    password: {presence: true},
-    firstName: {presence: true},
-    lastName: {presence: true},
-    email: {presence: true},
+    password: {
+        presence: true,
+        length: {
+            minimum: 3
+        }
+    },
+    firstName: {
+        presence: true
+    },
+    lastName: {
+        presence: true
+    },
+    email: {
+        email: {
+            message: 'is not valid'
+        }
+    },
 };
 
 export function validateSignupForm(attributes) {
