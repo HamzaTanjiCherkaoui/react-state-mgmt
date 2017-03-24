@@ -4,7 +4,7 @@ import logo from '../core/logo.png';
 export function FormContainer({children}) {
     return (
         <div className="row">
-            <div className="col-xs-12 offset-sm-2 col-sm-8 offset-md-3 col-md-6">
+            <div className="col-xs-12 offset-sm-2 col-sm-8 offset-lg-3 col-lg-6">
                 <Header />
 
                 <form>

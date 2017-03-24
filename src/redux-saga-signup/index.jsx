@@ -9,25 +9,19 @@ import {browserHistory} from '../core/browser-history';
 import {ConnectedRouter} from 'react-router-redux';
 import {Home} from '../components/home';
 
-export function ReduxSagaSignupExample() {
-    return (
-        <Provider store={store}>
-            <ConnectedRouter history={browserHistory}>
-                <div>
-                    <small className="badge badge-pill badge-default">Redux + Saga</small>
-
-                    <Switch>
-                        <Route path="/signup" exact={true} component={SignupForm} />
-                        <Route path="/signup/complete" component={CustomSignupComplete} />
-                        <Route path="/signup/cancel" component={CustomSignupCanceled} />
-                        <Route path="/home" component={Home} />
-                        <Redirect from="/" to="/signup" />
-                    </Switch>
-                </div>
-            </ConnectedRouter>
-        </Provider>
-    );
-}
+export const ReduxSagaSignupExample = () => (
+    <Provider store={store}>
+        <ConnectedRouter history={browserHistory}>
+            <Switch>
+                <Route path="/signup" exact={true} component={SignupForm} />
+                <Route path="/signup/complete" component={CustomSignupComplete} />
+                <Route path="/signup/cancel" component={CustomSignupCanceled} />
+                <Route path="/home" component={Home} />
+                <Redirect from="/" to="/signup" />
+            </Switch>
+        </ConnectedRouter>
+    </Provider>
+);
 
 function CustomSignupComplete() {
     return (

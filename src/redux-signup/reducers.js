@@ -56,6 +56,13 @@ function validationReducer(state = initialState.validation, action) {
                 error: {}
             };
 
+        case RESET_FORM:
+            return {
+                pending: false,
+                valid: false,
+                error: {}
+            };
+
         default:
             return state;
     }
