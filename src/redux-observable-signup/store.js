@@ -15,7 +15,7 @@ import {
     VALIDATE
 } from '../redux-signup/actions';
 import {signup} from '../core/signup.service';
-import {createEpicMiddleware, combineEpics} from 'redux-observable';
+import {combineEpics, createEpicMiddleware} from 'redux-observable';
 
 import {Observable} from 'rxjs';
 
@@ -30,33 +30,39 @@ export const store = createStore(
 
 function rootEpic() {
     return combineEpics(
-        // signupEpic,
+        signupEpic,
         validateEpic,
-        // navigateToCanceledPageEpic
+        navigateToCanceledPageEpic
     );
 }
 
-function* signupEpic(action$, store) {
-    yield takeLatest(SIGNUP, performSignup);
-    try {
-        yield put({type: SIGNUP_STARTED});
-        yield call(signup, formData);
-
-        yield put({type: SIGNUP_COMPLETED});
-        yield put({type: RESET_FORM});
-        yield put(push('/signup/complete'));
-    } catch (e) {
-        yield put({type: SIGNUP_FAILED});
-    }
+function signupEpic(action$) {
+    return action$
+        .ofType(SIGNUP)
+        .switchMap(({payload: formData}) =>
+            Observable.concat(
+                Observable.of({type: SIGNUP_STARTED}),
+                Observable.fromPromise(signup(formData))
+                    .switchMap(() =>
+                        Observable.of(
+                            {type: SIGNUP_COMPLETED},
+                            {type: RESET_FORM},
+                            push('/signup/complete')
+                        )
+                    )
+                    .catch(() => Observable.of({type: SIGNUP_FAILED}))
+            ));
 }
 
-function* navigateToCanceledPage() {
-    while (true) {
-        yield take(SIGNUP_CANCELED);
-        yield put({type: RESET_FORM});
-        yield put(push('/signup/cancel'));
-    }
+function navigateToCanceledPageEpic(action$) {
+    return action$
+        .ofType(SIGNUP_CANCELED)
+        .switchMap(() => Observable.of(
+            {type: RESET_FORM},
+            push('/signup/cancel')
+        ));
 }
+
 
 function validateEpic(action$) {
     return action$
