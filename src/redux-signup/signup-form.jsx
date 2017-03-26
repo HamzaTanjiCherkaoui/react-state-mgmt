@@ -10,7 +10,7 @@ import {batchActions} from 'redux-batched-actions';
 
 const debouncedValidate = debounce((dispatch, formData) => {
     dispatch(validateAction(formData));
-}, 250);
+}, 500);
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => {

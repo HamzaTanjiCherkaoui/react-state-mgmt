@@ -64,7 +64,7 @@ function* performSignup({payload: formData}) {
 }
 
 function* debouncedValidate() {
-    yield throttle(1000, VALIDATE, validateFormSaga);
+    yield throttle(500, VALIDATE, validateFormSaga);
 }
 
 function* validateFormSaga({payload: formData}) {

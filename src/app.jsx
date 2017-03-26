@@ -1,7 +1,7 @@
 import React from 'react';
 import {ReduxSignupExample} from './redux-signup';
 import {ReduxSagaSignupExample} from './redux-saga-signup';
-import {Link} from 'react-router-dom';
+import {ReduxObservableSignupExample} from './redux-observable-signup/index';
 
 const examples = [
     {name: 'redux', title: 'Redux'},
@@ -27,6 +27,7 @@ export class App extends React.Component {
 
                 {example === 'redux' && <ReduxSignupExample />}
                 {example === 'redux-saga' && <ReduxSagaSignupExample />}
+                {example === 'redux-observable' && <ReduxObservableSignupExample />}
             </div>
         );
     }
