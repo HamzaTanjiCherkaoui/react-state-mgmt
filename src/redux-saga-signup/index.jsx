@@ -8,8 +8,9 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 import {browserHistory} from '../core/browser-history';
 import {ConnectedRouter} from 'react-router-redux';
 import {Home} from '../components/home';
+import {withTitle} from '../components/with-title';
 
-export const ReduxSagaSignupExample = () => (
+export const ReduxSagaSignupExample = withTitle('Redux-Saga', () => (
     <Provider store={store}>
         <ConnectedRouter history={browserHistory}>
             <Switch>
@@ -21,7 +22,7 @@ export const ReduxSagaSignupExample = () => (
             </Switch>
         </ConnectedRouter>
     </Provider>
-);
+));
 
 function CustomSignupComplete() {
     return (

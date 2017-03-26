@@ -29,8 +29,11 @@ export class SignupForm extends React.Component {
                         again.</div>)
                         : null
                 }
+
+                <small className="float-right">{validation.pending ? 'Validating...' : ''}</small>
+
                 <FormField
-                    title={`Pick a username <small class="text-muted">${validation.pending ? '(Validating...)' : ''}</small>`}
+                    title={`Pick a username`}
                     value={username}
                     onChange={this.setUserName}
                     enableValidation={touched}

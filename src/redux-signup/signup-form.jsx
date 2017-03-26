@@ -6,7 +6,7 @@ import {push} from 'react-router-redux';
 import {debounce} from 'lodash';
 import {SignupForm as ConnectedSignupForm} from '../components/signup/signup-form';
 import {validateAction} from './form-validator';
-
+import {batchActions} from 'redux-batched-actions';
 
 const debouncedValidate = debounce((dispatch, formData) => {
     dispatch(validateAction(formData));
@@ -21,18 +21,26 @@ const mapDispatchToProps = (dispatch) => {
         },
 
         onCancel() {
-            dispatch({type: SIGNUP_CANCELED});
-            dispatch({type: RESET_FORM});
+            dispatch(batchActions([
+                {type: SIGNUP_CANCELED},
+                {type: RESET_FORM},
+            ]));
+
             dispatch(push('/signup/cancel'));
+
         },
 
         async onSignup(formData) {
             dispatch({type: SIGNUP_STARTED});
             try {
                 await signup(formData);
-                dispatch({type: SIGNUP_COMPLETED});
-                dispatch({type: RESET_FORM});
+                dispatch(batchActions([
+                    {type: SIGNUP_COMPLETED},
+                    {type: RESET_FORM},
+                ]));
+
                 dispatch(push('/signup/complete'));
+
             } catch (e) {
                 dispatch({type: SIGNUP_FAILED});
             }

@@ -8,8 +8,9 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 import {browserHistory} from '../core/browser-history';
 import {ConnectedRouter} from 'react-router-redux';
 import {Home} from '../components/home';
+import {withTitle} from '../components/with-title';
 
-export const ReduxSignupExample = () => (
+export const ReduxSignupExample = withTitle('Redux', () => (
     <Provider store={store}>
         <ConnectedRouter history={browserHistory}>
             <Switch>
@@ -21,7 +22,7 @@ export const ReduxSignupExample = () => (
             </Switch>
         </ConnectedRouter>
     </Provider>
-);
+));
 
 function CustomSignupComplete() {
     return (

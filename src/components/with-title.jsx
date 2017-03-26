@@ -3,7 +3,10 @@ import React from 'react';
 export function withTitle(title, Component) {
     return () => (
         <div>
-            <small className="badge badge-pill badge-default">{title}</small>
+            <div className="clearfix">
+                <small className="badge badge-pill badge-primary float-right">{title}</small>
+            </div>
+
             <Component />
         </div>
     );
