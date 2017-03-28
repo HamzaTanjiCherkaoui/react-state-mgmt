@@ -49,7 +49,7 @@ export class SignupForm extends React.Component {
     }
 
     onSignup = (formData) => {
-        this.props.store.performSignup(formData);
+        this.props.store.performSignup(formData, this.props.history);
     };
 
     onFieldChange = (field, value) => {
@@ -57,7 +57,7 @@ export class SignupForm extends React.Component {
     };
 
     onCancel = () => {
-        this.props.store.cancelSignup();
+        this.props.store.cancelSignup(this.props.history);
     };
 }
 

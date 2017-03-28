@@ -20,6 +20,7 @@ export class SignupForm extends React.Component {
         } = this.props;
 
         const signupLabel = signup.pending ? 'Signing up...' : 'Sign up';
+        const error = validation.error || {};
 
         return (
             <FormContainer>
@@ -37,14 +38,14 @@ export class SignupForm extends React.Component {
                     value={username}
                     onChange={this.setUserName}
                     enableValidation={touched}
-                    error={!validation.valid && validation.error.username} />
+                    error={!validation.valid && error.username} />
 
                 <FormField title="Pick a strong password"
                            type="password"
                            value={password}
                            onChange={this.setPassword}
                            enableValidation={touched}
-                           error={!validation.valid && validation.error.password} />
+                           error={!validation.valid && error.password} />
 
                 <div className="row">
                     <div className="col">
@@ -52,7 +53,7 @@ export class SignupForm extends React.Component {
                                    value={firstName}
                                    onChange={this.setFirstName}
                                    enableValidation={touched}
-                                   error={!validation.valid && validation.error.firstName} />
+                                   error={!validation.valid && error.firstName} />
 
                     </div>
                     <div className="col">
@@ -60,7 +61,7 @@ export class SignupForm extends React.Component {
                                    value={lastName}
                                    onChange={this.setLastName}
                                    enableValidation={touched}
-                                   error={!validation.valid && validation.error.lastName} />
+                                   error={!validation.valid && error.lastName} />
 
                     </div>
                 </div>
@@ -69,7 +70,7 @@ export class SignupForm extends React.Component {
                            value={email}
                            onChange={this.setEmail}
                            enableValidation={touched}
-                           error={!validation.valid && validation.error.email} />
+                           error={!validation.valid && error.email} />
 
 
                 <div className="row">

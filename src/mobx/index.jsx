@@ -4,9 +4,7 @@ import {SignupCanceled} from '../components/signup/signup-canceled';
 import {store} from './store';
 import {SignupForm} from './signup-form';
 import {Provider} from 'mobx-react';
-import {Redirect, Route, Switch} from 'react-router-dom';
-import {browserHistory} from '../core/browser-history';
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 import {Home} from '../components/home';
 import {withTitle} from '../components/with-title';
 import DevTools from 'mobx-react-devtools';
@@ -15,7 +13,7 @@ export const MobXSignupExample = withTitle('MobX', () => (
     <Provider store={store}>
         <div>
             <DevTools/>
-            <BrowserRouter history={browserHistory}>
+            <BrowserRouter>
                 <Switch>
                     <Route path="/signup" exact={true} component={SignupForm} />
                     <Route path="/signup/complete" component={CustomSignupComplete} />

@@ -1,7 +1,12 @@
 import {validateSignupForm} from '../core/signup-validator';
 import {signup} from '../core/signup.service';
-import {observable, reaction, action, when, runInAction} from 'mobx';
-import {browserHistory} from '../core/browser-history';
+import {
+    action,
+    observable,
+    reaction,
+    runInAction,
+    untracked
+} from 'mobx';
 
 class Store {
     @observable info = {
@@ -24,10 +29,41 @@ class Store {
     @observable validation = {
         pending: false,
         valid: false,
-        error: observable.ref({})
+        error: observable.ref(null)
     };
 
+    validationDisposer;
+
     init() {
+        this.setupValidation();
+    }
+
+    reset() {
+        this.validationDisposer && this.validationDisposer();
+
+        this.info = {
+            username: '',
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+
+            touched: false,
+        };
+
+
+        this.signup = {
+            pending: false,
+            completed: false,
+            failed: false
+        };
+
+        this.validation = {
+            pending: false,
+            valid: false,
+            error: null
+        };
+
         this.setupValidation();
     }
 
@@ -39,7 +75,7 @@ class Store {
     }
 
     setupValidation() {
-        reaction(
+        this.validationDisposer = reaction(
             () => {
                 const {
                     username,
@@ -82,12 +118,14 @@ class Store {
         );
     }
 
-    cancelSignup() {
-        browserHistory.push('/signup/cancel');
+    @action
+    cancelSignup(history) {
+        this.reset();
+        history.push('/signup/cancel');
     }
 
     @action
-    async performSignup(formData) {
+    async performSignup(formData, history) {
         this.signup.failed = false;
         this.signup.completed = false;
         this.signup.pending = true;
@@ -95,10 +133,11 @@ class Store {
         try {
             await signup(formData);
             runInAction(() => {
+                this.reset();
                 this.signup.completed = true;
             });
 
-            browserHistory.push('/signup/complete');
+            history.push('/signup/complete');
         } catch (err) {
             runInAction(() => {
                 this.signup.failed = true;
