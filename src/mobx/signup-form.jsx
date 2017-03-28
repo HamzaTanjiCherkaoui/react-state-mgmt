@@ -15,8 +15,12 @@ export class SignupForm extends React.Component {
                 email,
                 touched,
             },
-            validation,
-            signup,
+            validation: {
+                error, valid, pending
+            },
+            signup: {
+                pending: signupPending, failed, completed
+            },
         } = this.props.store;
 
         const props = {
@@ -28,23 +32,32 @@ export class SignupForm extends React.Component {
                 email,
                 touched,
             },
-            validation,
-            signup,
+            validation: {
+                error, valid, pending
+            },
+            signup: {
+                pending: signupPending, completed, failed
+            },
         };
 
         return (
             <ConnectedSignupForm {...props}
                                  onFieldChange={this.onFieldChange}
+                                 onSignup={this.onSignup}
                                  onCancel={this.onCancel} />
         );
     }
+
+    onSignup = (formData) => {
+        this.props.store.performSignup(formData);
+    };
 
     onFieldChange = (field, value) => {
         this.props.store.setFieldValue(field, value);
     };
 
     onCancel = () => {
-        this.props.store.onCancel();
+        this.props.store.cancelSignup();
     };
 }
 
