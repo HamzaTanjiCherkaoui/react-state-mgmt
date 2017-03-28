@@ -44,11 +44,11 @@ function signupEpic(action$) {
                 Observable.of({type: SIGNUP_STARTED}),
                 Observable.fromPromise(signup(formData))
                     .switchMap(() =>
-                        Observable.of(
+                        Observable.from([
                             {type: SIGNUP_COMPLETED},
                             {type: RESET_FORM},
                             push('/signup/complete')
-                        )
+                        ])
                     )
                     .catch(() => Observable.of({type: SIGNUP_FAILED}))
             ));

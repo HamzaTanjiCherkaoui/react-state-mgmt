@@ -2,6 +2,7 @@ import React from 'react';
 import {ReduxSignupExample} from './redux-signup';
 import {ReduxSagaSignupExample} from './redux-saga-signup';
 import {ReduxObservableSignupExample} from './redux-observable-signup/index';
+import {MobXSignupExample} from './mobx/index';
 
 const examples = [
     {name: 'redux', title: 'Redux'},
@@ -12,7 +13,7 @@ const examples = [
 
 export class App extends React.Component {
     state = {
-        example: 'redux'
+        example: 'mobx'
     };
 
     render() {
@@ -28,6 +29,7 @@ export class App extends React.Component {
                 {example === 'redux' && <ReduxSignupExample />}
                 {example === 'redux-saga' && <ReduxSagaSignupExample />}
                 {example === 'redux-observable' && <ReduxObservableSignupExample />}
+                {example === 'mobx' && <MobXSignupExample />}
             </div>
         );
     }
