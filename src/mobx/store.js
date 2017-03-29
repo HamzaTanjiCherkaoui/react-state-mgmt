@@ -1,12 +1,6 @@
 import {validateSignupForm} from '../core/signup-validator';
 import {signup} from '../core/signup.service';
-import {
-    action,
-    observable,
-    reaction,
-    runInAction,
-    untracked
-} from 'mobx';
+import {action, observable, reaction} from 'mobx';
 
 class Store {
     @observable info = {
@@ -34,36 +28,7 @@ class Store {
 
     validationDisposer;
 
-    init() {
-        this.setupValidation();
-    }
-
-    reset() {
-        this.validationDisposer && this.validationDisposer();
-
-        this.info = {
-            username: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-
-            touched: false,
-        };
-
-
-        this.signup = {
-            pending: false,
-            completed: false,
-            failed: false
-        };
-
-        this.validation = {
-            pending: false,
-            valid: false,
-            error: null
-        };
-
+    constructor() {
         this.setupValidation();
     }
 
@@ -98,18 +63,18 @@ class Store {
 
                 try {
                     await validateSignupForm(info);
-                    runInAction(() => {
+                    actio(() => {
                         this.validation.error = null;
                         this.validation.valid = true;
                     });
                 } catch (err) {
-                    runInAction(() => {
+                    actio(() => {
                         this.validation.error = err;
                         this.validation.valid = false;
                     });
                 }
                 finally {
-                    runInAction(() => {
+                    actio(() => {
                         this.validation.pending = false;
                     });
                 }
@@ -132,26 +97,52 @@ class Store {
 
         try {
             await signup(formData);
-            runInAction(() => {
+            action(() => {
                 this.reset();
                 this.signup.completed = true;
             });
 
             history.push('/signup/complete');
         } catch (err) {
-            runInAction(() => {
+            action(() => {
                 this.signup.failed = true;
             });
         } finally {
-            runInAction(() => {
+            action(() => {
                 this.signup.pending = false;
             });
         }
 
     }
+
+    reset() {
+        this.validationDisposer && this.validationDisposer();
+
+        this.info = {
+            username: '',
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+
+            touched: false,
+        };
+
+
+        this.signup = {
+            pending: false,
+            completed: false,
+            failed: false
+        };
+
+        this.validation = {
+            pending: false,
+            valid: false,
+            error: null
+        };
+
+        this.setupValidation();
+    }
 }
 
-const store = new Store();
-store.init();
-
-export {store};
+export const store = new Store();
