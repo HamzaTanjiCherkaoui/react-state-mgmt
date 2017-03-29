@@ -1,6 +1,6 @@
 import {validateSignupForm} from '../core/signup-validator';
 import {signup} from '../core/signup.service';
-import {action, observable, reaction} from 'mobx';
+import {action, observable, reaction, runInAction} from 'mobx';
 
 class Store {
     @observable info = {
@@ -63,18 +63,18 @@ class Store {
 
                 try {
                     await validateSignupForm(info);
-                    actio(() => {
+                    runInAction(() => {
                         this.validation.error = null;
                         this.validation.valid = true;
                     });
                 } catch (err) {
-                    actio(() => {
+                    runInAction(() => {
                         this.validation.error = err;
                         this.validation.valid = false;
                     });
                 }
                 finally {
-                    actio(() => {
+                    runInAction(() => {
                         this.validation.pending = false;
                     });
                 }
@@ -97,18 +97,18 @@ class Store {
 
         try {
             await signup(formData);
-            action(() => {
+            runInAction(() => {
                 this.reset();
                 this.signup.completed = true;
             });
 
             history.push('/signup/complete');
         } catch (err) {
-            action(() => {
+            runInAction(() => {
                 this.signup.failed = true;
             });
         } finally {
-            action(() => {
+            runInAction(() => {
                 this.signup.pending = false;
             });
         }
