@@ -2,7 +2,7 @@ import React from 'react';
 import {ReduxSignupExample} from './redux-signup';
 import {ReduxSagaSignupExample} from './redux-saga-signup';
 import {ReduxObservableSignupExample} from './redux-observable-signup/index';
-import {MobXSignupExample} from './mobx/index';
+import {MobXSignupExample} from './mobx-signup/index';
 
 const examples = [
     {name: 'redux', title: 'Redux'},
