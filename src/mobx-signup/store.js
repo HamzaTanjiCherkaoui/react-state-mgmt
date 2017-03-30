@@ -2,7 +2,7 @@ import {validateSignupForm} from '../core/signup-validator';
 import {signup} from '../core/signup.service';
 import {action, observable, reaction, runInAction} from 'mobx';
 
-class Store {
+export default class Store {
     @observable info = {
         username: '',
         firstName: '',
@@ -26,9 +26,14 @@ class Store {
         error: observable.ref(null)
     };
 
+    signupService;
+    validator;
     validationDisposer;
 
-    constructor() {
+    constructor({signupService, validator}) {
+        this.signupService = signupService;
+        this.validator = validator;
+
         this.setupValidation();
     }
 
@@ -62,7 +67,7 @@ class Store {
                 this.validation.pending = true;
 
                 try {
-                    await validateSignupForm(info);
+                    await this.validator(info);
                     runInAction(() => {
                         this.validation.error = null;
                         this.validation.valid = true;
@@ -96,7 +101,7 @@ class Store {
         this.signup.pending = true;
 
         try {
-            await signup(formData);
+            await this.signupService(formData);
             runInAction(() => {
                 this.reset();
                 this.signup.completed = true;
@@ -145,4 +150,7 @@ class Store {
     }
 }
 
-export const store = new Store();
+export const store = new Store({
+    signupService: signup,
+    validator: validateSignupForm
+});

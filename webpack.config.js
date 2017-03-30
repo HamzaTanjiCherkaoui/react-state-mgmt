@@ -32,21 +32,7 @@ module.exports = (env) => {
             rules: [
                 {
                     test: /\.jsx?$/,
-                    use: [{
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                ['env', {modules: false}],
-                                'stage-1',
-                                'react'
-                            ],
-                            plugins: [
-                                'transform-decorators-legacy',
-                                'transform-runtime',
-                                'react-hot-loader/babel'
-                            ]
-                        }
-                    }],
+                    use: 'babel-loader',
                     include: path.resolve(__dirname, 'src')
                 },
 
