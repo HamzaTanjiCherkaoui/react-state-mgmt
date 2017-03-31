@@ -1,9 +1,18 @@
 import Store from './store';
 
-test('Store', () => {
-    const mockSignup = () => Promise.resolve(true);
-    const mockValidator = () => Promise.resolve(true);
-    const s = new Store({signupService: mockSignup, validator: mockValidator})
+describe('Store', () => {
+    let store;
 
-    expect(s.info.username).toEqual('');
+    beforeEach(()=>{
+        const mockSignup = () => Promise.resolve(true);
+        const mockValidator = () => Promise.resolve(true);
+
+        store = new Store({signupService: mockSignup, validator: mockValidator})
+    });
+
+    it('should check if defaults are specified', ()=>{
+        expect(store.info.username).toEqual('');
+    });
+
 });
+

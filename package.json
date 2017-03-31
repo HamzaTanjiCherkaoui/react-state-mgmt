@@ -4,7 +4,7 @@
   "description": "State of State Management in React (Talk)",
   "scripts": {
     "start": "webpack-dev-server",
-    "test": "jest --debug --no-cache"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
