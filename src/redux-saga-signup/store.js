@@ -31,22 +31,26 @@ export const store = createStore(
 sagaMiddleware.run(mainSaga);
 
 function* mainSaga() {
-    yield fork(doSignup);
+    yield fork(doSignupSaga);
 
-    yield fork(debouncedValidate);
-    yield fork(navigateToCanceledPage);
+    yield fork(debouncedValidateSaga);
+    yield fork(navigateToCanceledPageSaga);
 }
 
-function* doSignup() {
+function* doSignupSaga() {
     yield takeLatest(SIGNUP, performSignup);
 }
 
-function* navigateToCanceledPage() {
+function* navigateToCanceledPageSaga() {
     while (true) {
         yield take(SIGNUP_CANCELED);
         yield put({type: RESET_FORM});
         yield put(push('/signup/cancel'));
     }
+}
+
+function* debouncedValidateSaga() {
+    yield throttle(500, VALIDATE, validateForm);
 }
 
 function* performSignup({payload: formData}) {
@@ -63,11 +67,7 @@ function* performSignup({payload: formData}) {
 
 }
 
-function* debouncedValidate() {
-    yield throttle(500, VALIDATE, validateFormSaga);
-}
-
-function* validateFormSaga({payload: formData}) {
+function* validateForm({payload: formData}) {
     try {
         yield put({type: VALIDATE_START});
         yield call(validateSignupForm, formData);
