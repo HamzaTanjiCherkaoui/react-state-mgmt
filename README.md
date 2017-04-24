@@ -5,14 +5,8 @@ State of State Management in React (Talk)
 
 - react
 - react-router v4
-- redux (thunks, batch, sagas)
+- redux (thunks, batch, sagas, observables)
 - mobx
-- rxjs with redux-observables
 - validate.js
 
-## Outline
-
-- Signup with validation
-- Login screen
-- Dashboard to load from a server call
-- Side Effects
+![Screenshot](screenshot.png)
