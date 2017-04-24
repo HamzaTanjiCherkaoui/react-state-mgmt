@@ -31,13 +31,13 @@ export const store = createStore(
 sagaMiddleware.run(mainSaga);
 
 function* mainSaga() {
-    yield fork(doSignupSaga);
+    yield fork(signupSaga);
 
-    yield fork(debouncedValidateSaga);
+    yield fork(validationSaga);
     yield fork(navigateToCanceledPageSaga);
 }
 
-function* doSignupSaga() {
+function* signupSaga() {
     yield takeLatest(SIGNUP, performSignup);
 }
 
@@ -49,7 +49,7 @@ function* navigateToCanceledPageSaga() {
     }
 }
 
-function* debouncedValidateSaga() {
+function* validationSaga() {
     yield throttle(500, VALIDATE, validateForm);
 }
 
