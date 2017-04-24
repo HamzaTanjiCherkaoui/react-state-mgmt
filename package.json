@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "State of State Management in React (Talk)",
   "scripts": {
-    "start": "webpack-dev-server",
-    "test": "jest"
+    "start": "webpack-dev-server"
   },
   "keywords": [],
   "author": "",
