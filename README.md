@@ -1,6 +1,8 @@
 # react-state-mgmt
 State of State Management in React (Talk)
 
+> See the app [live](https://react-state-mgmt-mmbwvcqnom.now.sh/)
+
 ## Uses
 
 - react
