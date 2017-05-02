@@ -11,4 +11,4 @@ State of State Management in React (Talk)
 - mobx
 - validate.js
 
-![Screenshot](screenshot.png)
+[![Screenshot](screenshot.png)](https://react-state-mgmt-mmbwvcqnom.now.sh/)
