@@ -8,12 +8,12 @@ const port = 8080;
 module.exports = (env) => {
     return {
         entry: {
-            main: [
+            main: env.development ? [
                 'react-hot-loader/patch',
                 `webpack-dev-server/client?http://localhost:${port}`,
                 'webpack/hot/only-dev-server',
                 './src/index.jsx'
-            ],
+            ] : './src/index.jsx',
             vendor: './src/vendor.js'
         },
 
@@ -59,18 +59,21 @@ module.exports = (env) => {
         },
 
         plugins: [
-            new ExtractTextWebpackPlugin({filename: 'main.css', disable: false, allChunks: true}),
+            new ExtractTextWebpackPlugin({filename: 'main.css'}),
             new HtmlWebpackPlugin({
                 template: './src/index.html',
-                title: 'Instiview'
+                title: 'React State Management'
             }),
 
-            new webpack.HotModuleReplacementPlugin(),
+            env.development ? new webpack.HotModuleReplacementPlugin() : null,
             new webpack.NamedModulesPlugin(),
             new webpack.NoEmitOnErrorsPlugin(),
-        ],
+        ].filter(p => p !== null),
 
-        devtool: 'inline-source-map',
+        devtool: 'cheap-module-source-map',
+        stats: {
+            maxModules: 0
+        },
         devServer: {
             port,
             stats: 'minimal',
