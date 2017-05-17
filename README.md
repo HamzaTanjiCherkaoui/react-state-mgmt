@@ -1,6 +1,8 @@
 # react-state-mgmt
 State of State Management in React (Talk)
 
+> [Talk Abstract](https://2017.syntaxcon.com/session/state-of-state-management-in-react/) 
+
 > [Live Demo](https://react-state-mgmt-mmbwvcqnom.now.sh/)
 
 > [Video -- will be uploaded later]
