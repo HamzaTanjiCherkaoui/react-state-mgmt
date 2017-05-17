@@ -1,8 +1,9 @@
 # react-state-mgmt
 State of State Management in React (Talk)
 
-> See the app [live](https://react-state-mgmt-mmbwvcqnom.now.sh/)
+> [Live Demo](https://react-state-mgmt-mmbwvcqnom.now.sh/)
 
+> [Video -- will be uploaded later]
 
 ## Summary
 
