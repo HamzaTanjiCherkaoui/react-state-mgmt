@@ -110,17 +110,40 @@ export class SignupForm extends React.Component {
         this.props.onSignup(data);
     };
 
-    setField = field => (event => {
+    setField = (field, value) => {
         const state = this.getFormData();
-        const value = event.target.value;
 
         state[field] = value;
         this.props.onFieldChange(field, value, state);
-    });
+    };
 
-    setUserName = this.setField('username');
-    setPassword = this.setField('password');
-    setFirstName = this.setField('firstName');
-    setLastName = this.setField('lastName');
-    setEmail = this.setField('email');
+    setUserName = event => this.setField('username', event.target.value);
+    setPassword = event => this.setField('password', event.target.value);
+    setFirstName = event => this.setField('firstName', event.target.value);
+    setLastName = event => this.setField('lastName', event.target.value);
+    setEmail = event => this.setField('email', event.target.value);
+
+    componentDidMount() {
+        document.addEventListener('keydown', this.fillForm);
+    }
+
+    fillForm = (event) => {
+        if (event.keyCode !== 13) {
+            return;
+        }
+
+        if (event.target.tagName.toLowerCase() === 'input') {
+            return;
+        }
+
+        this.setField('username', 'pavanpodila');
+        this.setField('password', 'pwd123');
+        this.setField('firstName', 'Pavan');
+        this.setField('lastName', 'Podila');
+        this.setField('email', 'ppodila@sapient.com');
+    };
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.fillForm);
+    }
 }
