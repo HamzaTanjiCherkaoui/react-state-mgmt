@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "State of State Management in React (Talk)",
   "scripts": {
-    "start:dev": "NODE_ENV=development webpack-dev-server --env.development",
-    "start": "serve ./build --single",
+    "start": "NODE_ENV=development webpack-dev-server --env.development",
+    "start:dist": "serve ./build --single",
     "build": "NODE_ENV=production rm -rf build && webpack -p --env.production"
   },
   "keywords": [],
