@@ -5,7 +5,7 @@ State of State Management in React (Talk)
 - [Talk Abstract](https://2017.syntaxcon.com/session/state-of-state-management-in-react/) 
 - [Live Demo](https://react-state-mgmt-mmbwvcqnom.now.sh/)
 - [Slides](slides.pdf)
-- [Video -- will be uploaded later]
+- [Video Recording](https://www.youtube.com/watch?v=LWuOj0etYBQ)
 
 ## Summary
 
